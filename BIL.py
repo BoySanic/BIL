@@ -19,22 +19,22 @@ def parse(c):
 	while(True):
 		word = cinput[num]
 		if("Add" in word):
-			param = (word[num].split('(')[0].replace(')', ''))
+			param = (word.split('(')[1].replace(')', ''))
 			for x in range(int(param)):
 				output += '+'
 			num += 1
 		if("Subtract" in word):
-			param = (word[num].split('(')[0].replace(')', ''))
+			param = (word.split('(')[0].replace(')', ''))
 			for x in range(int(param)):
 				output += '-'
 			num += 1
 		if("Left" in word):
-			param = (word[num].split('(')[0].replace(')', ''))
+			param = (word.split('(')[1].replace(')', ''))
 			for x in range(int(param)):
 				output += '<'
 			num += 1
-		if("Right" in word):
-			param = (word[num].split('(')[0].replace(')', ''))
+		if("Right" in word): 
+			param = (word.split('(')[1].replace(')', ''))
 			for x in range(int(param)):
 				output += '>'
 			num += 1
@@ -59,7 +59,7 @@ def main():
 	print(contents)
 	f.close()
 	output = parse(contents)
-	of = open("out.b")
+	of = open("out.b", "w+")
 	of.write(output)
 	of.close()
 
