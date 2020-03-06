@@ -9,43 +9,58 @@
 #. Print
 #, Input
 
+import sys
 
 def parse(c):
 	output = ""
-	cinput = c.Split(' ')
+	cinput = c.split('\n')
 	num = 0
+	limit = len(cinput)
 	while(True):
 		word = cinput[num]
-		if(cinput.Contains("Add")):
-			param = (cinput.Split('(')[0].replace(')', ''))
+		if("Add" in word):
+			param = (word[num].split('(')[0].replace(')', ''))
 			for x in range(int(param)):
 				output += '+'
 			num += 1
-		if(cinput.Contains("Subtract")):
-			param = (cinput.Split('(')[0].replace(')', ''))
+		if("Subtract" in word):
+			param = (word[num].split('(')[0].replace(')', ''))
 			for x in range(int(param)):
 				output += '-'
 			num += 1
-		if(cinput.Contains("Left")):
-			param = (cinput.Split('(')[0].replace(')', ''))
+		if("Left" in word):
+			param = (word[num].split('(')[0].replace(')', ''))
 			for x in range(int(param)):
 				output += '<'
 			num += 1
-		if(cinput.Contains("Right")):
-			param = (cinput.Split('(')[0].replace(')', ''))
+		if("Right" in word):
+			param = (word[num].split('(')[0].replace(')', ''))
 			for x in range(int(param)):
 				output += '>'
 			num += 1
-		if(cinput.Contains("Print")):
+		if("Print" in word):
 			output += '.'
-		if(cinput.Contains("Input")):
+			num += 1
+		if("Input" in word):
 			output += ','
-		if(cinput.Contains("{")):
+			num += 1
+		if("{" in word):
 			output += '{'
-		if(cinput.Contains("}")):
+			num += 1
+		if("}" in word):
 			output += '}'
-
+			num += 1
+		if(num == limit):
+			return output
 def main():
-	f = fopen(sys.argv[1])
+	print("Test")
+	f = open(sys.argv[1])
 	contents = f.read()
+	print(contents)
+	f.close()
 	output = parse(contents)
+	of = open("out.b")
+	of.write(output)
+	of.close()
+
+main()
