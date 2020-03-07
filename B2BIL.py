@@ -10,54 +10,108 @@
 #, Input
 
 import sys
-
-def parse(c):
-	output = ""
-	cinput = c.split('\n')
+class Operation:
+	def __init__(self, o, c):
+		self.opcode = o
+		self.count = c
+def compress(brainfuck):
+	operList = []
 	num = 0
-	limit = len(cinput)
 	while(True):
-		word = cinput[num]
-		if("Add" in word):
-			param = (word.split('(')[1].replace(')', ''))
-			for x in range(int(param)):
-				output += '+'
+		count = 0
+		char = brainfuck[num]
+		if(char == ">"):
+			for x in range(num, len(brainfuck)):
+				if(brainfuck[x] == ">"):
+					count += 1
+					num += 1
+				if(brainfuck[x] == "<"):
+					count -= 1
+					num += 1
+				if((brainfuck[x] == "<" or brainfuck[x] == ">") == False):
+					break
+
+		elif(char == "<"):
+			for x in range(num, len(brainfuck)):
+				if(brainfuck[x] == "<"):
+					count += 1
+					num += 1
+				if(brainfuck[x] == ">"):
+					count -= 1
+					num += 1
+				if((brainfuck[x] == "<" or brainfuck[x] == ">") == False):
+					break
+		elif(char == "+"):
+			for x in range(num, len(brainfuck)):
+				if(brainfuck[x] == "+"):
+					count += 1
+					num += 1
+				if(brainfuck[x] == "-"):
+					count -= 1
+					num += 1
+				if((brainfuck[x] == "+" or brainfuck[x] == "-") == False):
+					break
+		elif(char == "-"):
+			for x in range(num, len(brainfuck)):
+				if(brainfuck[x] == "+"):
+					count -= 1
+					num += 1
+				if(brainfuck[x] == "-"):
+					count += 1
+					num += 1
+				if((brainfuck[x] == "+" or brainfuck[x] == "-") == False):
+					break
+		elif(char == "."):
+			count += 1
 			num += 1
-		if("Subtract" in word):
-			param = (word.split('(')[0].replace(')', ''))
-			for x in range(int(param)):
-				output += '-'
+		elif(char == ","):
+			count += 1
 			num += 1
-		if("Left" in word):
-			param = (word.split('(')[1].replace(')', ''))
-			for x in range(int(param)):
-				output += '<'
+		elif(char == "["):
+			count += 1
 			num += 1
-		if("Right" in word): 
-			param = (word.split('(')[1].replace(')', ''))
-			for x in range(int(param)):
-				output += '>'
+		elif(char == "]"):
+			count += 1
 			num += 1
-		if("Print" in word):
-			output += '.'
+		else:
 			num += 1
-		if("Input" in word):
-			output += ','
-			num += 1
-		if("{" in word):
-			output += '{'
-			num += 1
-		if("}" in word):
-			output += '}'
-			num += 1
-		if(num == limit):
-			return output
+		#raw_input()
+		o = Operation(char, count)
+		print(o.opcode + " " +str(o.count))
+		operList.append(o)
+		if(num == len(brainfuck)):
+			return operList
+def parse(operations):
+	output = ""
+	num = 0
+	while(True):
+		if(num == len(operations)):
+			break
+		if(operations[num].opcode == "+"):
+			output += "Add(" + str(operations[num].count) + ")\n"
+		if(operations[num].opcode == "-"):
+			output += "Subtract(" + str(operations[num].count) + ")\n"
+		if(operations[num].opcode == "<"):
+			output += "Left(" + str(operations[num].count) + ")\n"
+		if(operations[num].opcode == ">"):
+			output += "Left(" + str(operations[num].count) + ")\n"
+		if(operations[num].opcode == "["):
+			output += "{\n"
+		if(operations[num].opcode == "]"):
+			output += "}\n"
+		if(operations[num].opcode == "."):
+			output += "Print\n"
+		if(operations[num].opcode == ","):
+			output += "Input\n"
+		num += 1
+	return output
 def main():
 	f = open(sys.argv[1])
 	contents = f.read()
 	f.close()
-	output = parse(contents)
-	of = open("out.b", "w+")
+	operations = compress(contents)
+	output = parse(operations)
+	of = open(sys.argv[2], "w+")
 	of.write(output)
 	of.close()
 
