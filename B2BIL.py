@@ -53,10 +53,8 @@ def parse(c):
 		if(num == limit):
 			return output
 def main():
-	print("Test")
 	f = open(sys.argv[1])
 	contents = f.read()
-	print(contents)
 	f.close()
 	output = parse(contents)
 	of = open("out.b", "w+")
